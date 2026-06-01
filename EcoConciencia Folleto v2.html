@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eco-Conciencia · Contaminación Ambiental</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#0d4f2e;--green-mid:#1a7a47;--green-light:#2db87a;
+  --green-pale:#e8f7ef;--amber:#c97b2a;--red:#c0392b;
+  --blue:#1a5e9e;--purple:#6b3fa0;--white:#faf9f6;--dark:#0e1a13;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--white);overflow-x:hidden;}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--green-light),#7ef7c0);width:0%;z-index:1000;transition:width .3s ease;}
+#dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:999;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);border:1.5px solid rgba(255,255,255,.4);cursor:pointer;transition:all .3s;}
+.dot.active{background:var(--green-light);border-color:var(--green-light);transform:scale(1.4)}
+.section{min-height:100vh;width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:60px 20px;}
+
+/* HERO */
+#s0{background:#0e1a13;}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.pexels.com/photos/2990644/pexels-photo-2990644.jpeg?auto=compress&cs=tinysrgb&w=1400');background-size:cover;background-position:center;opacity:.22;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,26,19,.3) 0%,rgba(14,26,19,.85) 60%,var(--dark) 100%);}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:820px;}
+.hero-tag{display:inline-block;background:rgba(45,184,122,.15);border:1px solid rgba(45,184,122,.4);color:var(--green-light);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:6px 18px;border-radius:30px;margin-bottom:28px;animation:fadeUp .8s ease both;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(42px,7vw,88px);font-weight:900;line-height:1.05;margin-bottom:20px;animation:fadeUp .8s .15s ease both;}
+.hero h1 em{font-style:italic;color:var(--green-light);}
+.hero-sub{font-size:clamp(15px,2vw,19px);font-weight:300;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:40px;animation:fadeUp .8s .3s ease both;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation:fadeUp .8s .45s ease both;}
+.meta-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:8px 18px;font-size:13px;color:rgba(255,255,255,.7);}
+.meta-pill svg{width:16px;height:16px;stroke:var(--green-light);fill:none;stroke-width:2;flex-shrink:0}
+.btn-start{display:inline-flex;align-items:center;gap:10px;margin-top:40px;background:var(--green-light);color:#0e1a13;font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;transition:all .25s;animation:fadeUp .8s .6s ease both;}
+.btn-start:hover{background:#7ef7c0;transform:translateY(-2px);box-shadow:0 12px 40px rgba(45,184,122,.35)}
+.btn-start svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5}
+.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.1em;text-transform:uppercase;animation:bounce 2s infinite;}
+.scroll-hint svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+/* STATS BAND */
+#stats{background:linear-gradient(135deg,#0a1f14,#0d2b1a);padding:50px 20px;border-top:1px solid rgba(45,184,122,.12);border-bottom:1px solid rgba(45,184,122,.12);}
+.stats-grid{display:flex;flex-wrap:wrap;justify-content:center;max-width:900px;width:100%;}
+.stat-item{flex:1;min-width:160px;text-align:center;padding:20px 24px;border-right:1px solid rgba(255,255,255,.07);}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,48px);font-weight:900;color:var(--green-light);line-height:1;}
+.stat-unit{font-size:14px;font-weight:500;color:var(--green-light);opacity:.7}
+.stat-label{font-size:12px;font-weight:300;color:rgba(255,255,255,.5);margin-top:6px;line-height:1.4;}
+
+/* CARDS */
+#s1{background:#0b1810;padding:80px 20px;}
+.section-head{text-align:center;margin-bottom:52px;max-width:700px;}
+.section-kicker{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--green-light);margin-bottom:12px;}
+.section-head h2{font-family:'Playfair Display',serif;font-size:clamp(28px,4.5vw,46px);font-weight:700;line-height:1.2;color:var(--white);}
+.section-head p{margin-top:14px;font-size:16px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.7;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;max-width:1020px;width:100%;}
+.pcard{border-radius:18px;overflow:hidden;cursor:pointer;position:relative;transition:transform .35s cubic-bezier(.23,1,.32,1),box-shadow .35s;background:#111d14;border:1px solid rgba(255,255,255,.07);}
+.pcard:hover{transform:translateY(-7px) scale(1.01);box-shadow:0 28px 70px rgba(0,0,0,.55);}
+.pcard-img-wrap{position:relative;overflow:hidden;}
+.pcard-img{width:100%;height:185px;object-fit:cover;display:block;transition:transform .5s ease,filter .4s;filter:saturate(.75) brightness(.7);}
+.pcard:hover .pcard-img{transform:scale(1.06);filter:saturate(1) brightness(.85)}
+.pcard-img-label{position:absolute;bottom:10px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.8);padding:3px 10px;border-radius:20px;}
+.pcard-body{padding:22px 22px 24px}
+.pcard-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:20px;}
+.pcard-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:8px;color:var(--white);}
+.pcard-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:14px;}
+.pcard-indicator{display:inline-block;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;}
+.pcard-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:500;color:var(--green-light);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:gap .2s;}
+.pcard-link:hover{gap:10px}
+.pcard-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* MODAL */
+#modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+#modal-overlay.open{opacity:1;pointer-events:all}
+#modal{background:#131e16;border:1px solid rgba(255,255,255,.1);border-radius:24px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(24px) scale(.97);transition:transform .35s cubic-bezier(.23,1,.32,1);position:relative;}
+#modal-overlay.open #modal{transform:translateY(0) scale(1)}
+.modal-img{width:100%;height:240px;object-fit:cover;border-radius:24px 24px 0 0;filter:brightness(.65)}
+.modal-body{padding:28px 32px 36px}
+.modal-kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;margin-bottom:14px;color:var(--white);}
+.modal-def{font-size:15px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:24px;border-left:3px solid var(--green-light);padding-left:16px;}
+.two-boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:520px){.two-boxes{grid-template-columns:1fr}}
+.box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;}
+.box-title{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;}
+.box ul{list-style:none}
+.box ul li{font-size:13px;font-weight:300;color:rgba(255,255,255,.65);padding:5px 0 5px 16px;position:relative;line-height:1.4;border-bottom:1px solid rgba(255,255,255,.05);}
+.box ul li:last-child{border-bottom:none}
+.box ul li::before{content:"→";position:absolute;left:0;font-size:11px;top:6px;opacity:.5;}
+.action-box{background:rgba(45,184,122,.08);border:1px solid rgba(45,184,122,.2);border-radius:14px;padding:18px;margin-bottom:20px;}
+.action-box-title{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green-light);margin-bottom:10px;}
+.action-box p{font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.6;}
+.modal-close{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:var(--white);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1;z-index:10;}
+.modal-close:hover{background:rgba(255,255,255,.18)}
+
+/* ACCION */
+#s2{background:#08180e;position:relative;}
+.s2-bg{position:absolute;inset:0;background-image:url('https://images.pexels.com/photos/1125850/pexels-photo-1125850.jpeg?auto=compress&cs=tinysrgb&w=1400');background-size:cover;background-position:center 55%;opacity:.13;}
+.s2-overlay{position:absolute;inset:0;background:linear-gradient(135deg,#08180eee 55%,transparent)}
+.s2-content{position:relative;z-index:2;max-width:940px;width:100%}
+.actions-flex{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:36px;}
+.action-tile{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px 18px;transition:all .3s;position:relative;overflow:hidden;}
+.action-tile::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(45,184,122,.09),transparent);opacity:0;transition:opacity .3s;}
+.action-tile:hover{border-color:rgba(45,184,122,.35);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.action-tile:hover::before{opacity:1}
+.action-emoji{font-size:28px;margin-bottom:12px;display:block}
+.action-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px}
+.action-desc{font-size:12px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* QUIZ */
+#s3{background:var(--dark)}
+.quiz-wrap{max-width:680px;width:100%}
+.quiz-counter{font-size:12px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:8px;}
+.quiz-progress-bar{height:3px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:36px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:var(--green-light);border-radius:3px;transition:width .5s ease;}
+.quiz-card{background:#111d14;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:36px;animation:fadeUp .4s ease both;}
+.quiz-q-text{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.3;margin-bottom:30px;color:var(--white);}
+.quiz-options{display:flex;flex-direction:column;gap:12px}
+.q-opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:16px 20px;font-size:15px;font-weight:400;color:rgba(255,255,255,.8);cursor:pointer;text-align:left;transition:all .2s;font-family:'Outfit',sans-serif;}
+.q-opt:hover:not(:disabled){background:rgba(45,184,122,.1);border-color:rgba(45,184,122,.4);color:var(--white);}
+.q-opt.correct{background:rgba(45,184,122,.15);border-color:var(--green-light);color:#7ef7c0;}
+.q-opt.wrong{background:rgba(192,57,43,.15);border-color:#e74c3c;color:#ff8a80;}
+.quiz-feedback{margin-top:20px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.6;display:none;}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:rgba(45,184,122,.1);border:1px solid rgba(45,184,122,.2);color:#9ef7c5}
+.quiz-feedback.fail{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.2);color:#ff9a91}
+/* FIX: btn-next sin display:none duplicado */
+.btn-next{margin-top:24px;background:var(--green-mid);color:var(--white);font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;transition:all .2s;display:none;align-items:center;gap:8px;}
+.btn-next.show{display:inline-flex}
+.btn-next:hover{background:var(--green-light);color:#0e1a13}
+.btn-next svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5}
+.score-reveal{text-align:center;padding:48px 20px;animation:fadeUp .6s ease both;}
+.score-big{font-family:'Playfair Display',serif;font-size:80px;font-weight:900;color:var(--green-light);line-height:1;}
+.score-label{font-size:18px;font-weight:300;color:rgba(255,255,255,.6);margin-top:10px;margin-bottom:30px;}
+.score-msg{font-size:20px;font-weight:500;color:var(--white);margin-bottom:30px;line-height:1.5;}
+.btn-restart{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--white);font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;border-radius:50px;cursor:pointer;transition:all .2s;}
+.btn-restart:hover{background:rgba(255,255,255,.15)}
+
+/* FOOTER */
+#s4{min-height:auto;background:linear-gradient(135deg,var(--green),#0a3d21);padding:60px 20px;text-align:center;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.footer-inst{font-size:13px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}
+.footer-line{width:48px;height:2px;background:var(--green-light);margin:20px auto;border-radius:2px;}
+.footer-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.8;}
+.footer-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:24px;}
+.footer-badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+@media(max-width:600px){
+  .stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.07)}
+  .stat-item:last-child{border-bottom:none}
+  .modal-body{padding:20px 18px 28px}
+  .quiz-card{padding:24px 18px}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="dots"></div>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modal-img" src="" alt="" class="modal-img">
+    <div class="modal-body">
+      <div class="modal-kicker" id="modal-kicker"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-def" id="modal-def"></div>
+      <div class="two-boxes" id="modal-boxes"></div>
+      <div class="action-box">
+        <div class="action-box-title">🌿 Acción local desde el Politécnico</div>
+        <p id="modal-action"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="section" id="s0">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;display:inline;vertical-align:-2px;margin-right:4px" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Cátedra de Ecología · Politécnico Colombiano
+    </div>
+    <div class="hero">
+      <h1>Eco-Conciencia<br><em>en el Valle</em></h1>
+    </div>
+    <p class="hero-sub">
+      Tipos, causas y efectos de la contaminación ambiental<br>
+      en el <strong>Valle de Aburrá</strong> · Material interactivo para pregrado
+    </p>
+    <div class="hero-meta">
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        Politécnico Colombiano Jaime Isaza Cadavid
+      </div>
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Estudiantes de Pregrado
+      </div>
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        120 minutos
+      </div>
+    </div>
+    <button class="btn-start" onclick="document.getElementById('stats').scrollIntoView({behavior:'smooth'})">
+      Explorar el folleto
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+  <div class="scroll-hint">
+    <span>Desplázate</span>
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-grid reveal">
+    <div class="stat-item">
+      <div class="stat-num">7M<span class="stat-unit">+</span></div>
+      <div class="stat-label">muertes anuales por contaminación del aire en el mundo</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">PM<span class="stat-unit">2.5</span></div>
+      <div class="stat-label">principal contaminante monitoreado por el SIATA en Medellín</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">50B<span class="stat-unit">kg</span></div>
+      <div class="stat-label">residuos electrónicos generados al año globalmente</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">65<span class="stat-unit">dB</span></div>
+      <div class="stat-label">límite OMS de ruido urbano — superado en muchas vías de Medellín</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPOS -->
+<section class="section" id="s1" style="background:#0b1810">
+  <div class="section-head reveal">
+    <div class="section-kicker">Tipos de contaminación</div>
+    <h2>Seis amenazas para<br>nuestro entorno</h2>
+    <p>Toca cada tarjeta para ver causas, efectos y qué podemos hacer desde el campus.</p>
+  </div>
+  <div class="cards-grid" id="cardGrid"></div>
+</section>
+
+<!-- ACCION LOCAL -->
+<section class="section" id="s2">
+  <div class="s2-bg"></div>
+  <div class="s2-overlay"></div>
+  <div class="s2-content">
+    <div class="section-head reveal" style="margin-bottom:0">
+      <div class="section-kicker">Valle de Aburrá · Campus Politécnico</div>
+      <h2>Lo que SÍ podemos<br>hacer desde aquí</h2>
+      <p>Pequeñas acciones colectivas generan cambios reales en uno de los valles urbanos más contaminados de Latinoamérica.</p>
+    </div>
+    <div class="actions-flex" id="actionsGrid"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="section" id="s3">
+  <div class="section-head reveal">
+    <div class="section-kicker">Evaluación</div>
+    <h2>Pon a prueba<br>tu conocimiento</h2>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-counter" id="qCounter">Pregunta 1 de 5</div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qBar" style="width:20%"></div></div>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<section class="section" id="s4">
+  <div class="footer-logo">🌿 Eco-Conciencia</div>
+  <div class="footer-inst">Politécnico Colombiano Jaime Isaza Cadavid</div>
+  <div class="footer-line"></div>
+  <p class="footer-sub">
+    Cátedra de Ecología · Material Didáctico Interactivo<br>
+    <span style="color:rgba(255,255,255,.35);font-size:12px">Diseñado para promover conciencia ambiental en el Valle de Aburrá</span>
+  </p>
+  <div class="footer-badges">
+    <span class="footer-badge">🌎 Contaminación Ambiental</span>
+    <span class="footer-badge">📚 Pregrado</span>
+    <span class="footer-badge">🏙️ Valle de Aburrá</span>
+    <span class="footer-badge">♻️ Acción Local</span>
+  </div>
+</section>
+
+<script>
+const pollutions = [
+  {
+    id:'atm', color:'#1a5e9e', lightColor:'#a8d4f5',
+    icon:'🌫️', kicker:'Contaminación',
+    title:'Atmosférica',
+    img:'https://images.pexels.com/photos/3621344/pexels-photo-3621344.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Smog urbano industrial',
+    indicator:'PM2.5 · CO₂ · Ozono',
+    desc:'Emisiones de partículas y gases que degradan la calidad del aire en el Valle de Aburrá.',
+    def:'La contaminación atmosférica ocurre cuando sustancias nocivas como partículas, humos y gases se acumulan en el aire. En Medellín, la topografía de montaña dificulta la dispersión, agravando el problema especialmente en épocas de bajas lluvias.',
+    causes:['Tráfico vehicular intenso','Industrias sin filtros adecuados','Quemas agrícolas y forestales','Calefacción con leña o carbón'],
+    effects:['Enfermedades respiratorias crónicas','Lluvia ácida que daña ecosistemas','Agravamiento del cambio climático','Reducción de visibilidad'],
+    action:'Usar el Metro o bicicleta en lugar del carro reduce emisiones de PM2.5. Desde el Poli, apoya el programa de movilidad sostenible y reporta al SIATA las alertas de calidad del aire.'
+  },
+  {
+    id:'hid', color:'#0d6e5c', lightColor:'#7ef7c0',
+    icon:'💧', kicker:'Contaminación',
+    title:'Hídrica',
+    img:'https://images.pexels.com/photos/2480807/pexels-photo-2480807.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Río contaminado',
+    indicator:'Microplásticos · Metales pesados',
+    desc:'Vertimientos industriales y domésticos que degradan el Río Medellín y sus afluentes.',
+    def:'El agua se contamina cuando recibe sustancias tóxicas que alteran su composición química y biológica. El Río Medellín ha sido uno de los más contaminados del país, aunque proyectos como el saneamiento del río buscan su recuperación gradual.',
+    causes:['Aguas residuales sin tratamiento','Vertimientos industriales directos','Uso excesivo de plaguicidas','Residuos plásticos y microplásticos'],
+    effects:['Muerte de fauna acuática y ribereña','Enfermedades gastrointestinales','Bioacumulación de tóxicos en la cadena alimentaria','Pérdida de biodiversidad acuática'],
+    action:'Evita arrojar aceites, medicamentos o productos químicos por el desagüe. En el campus, reporta cualquier vertimiento irregular a la coordinación ambiental.'
+  },
+  {
+    id:'sue', color:'#7a4a10', lightColor:'#f7c87e',
+    icon:'🌱', kicker:'Contaminación',
+    title:'Del Suelo',
+    img:'https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Residuos sólidos y basura',
+    indicator:'E-waste · Agroquímicos',
+    desc:'Residuos sólidos, basura electrónica y agroquímicos que degradan la tierra.',
+    def:'La contaminación del suelo destruye la microbiota y estructura del terreno, haciéndolo infértil o tóxico. La basura electrónica (e-waste) es especialmente peligrosa porque libera plomo, mercurio y cadmio en la tierra.',
+    causes:['Basureros clandestinos y rellenos ilegales','Uso masivo de fertilizantes y herbicidas','Disposición inadecuada de e-waste','Deforestación que acelera erosión'],
+    effects:['Erosión y desertificación del terreno','Contaminación de cultivos y alimentos','Filtración de tóxicos al agua subterránea','Pérdida de microorganismos benéficos'],
+    action:'Entrega tus pilas, celulares y computadores viejos en los puntos RESPEL del Poli o centros de acopio de Medellín. Un solo celular mal desechado puede contaminar 40.000 litros de agua.'
+  },
+  {
+    id:'vis', color:'#7b2d8b', lightColor:'#e0a8f7',
+    icon:'👁️', kicker:'Contaminación',
+    title:'Visual',
+    img:'https://images.pexels.com/photos/1486974/pexels-photo-1486974.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Saturación publicitaria urbana',
+    indicator:'Sobrecarga visual · Paisaje',
+    desc:'Exceso de publicidad, cables y estructuras que deterioran el entorno urbano.',
+    def:'La contaminación visual es la acumulación excesiva de estímulos visuales que degradan el paisaje urbano y natural. Genera estrés, ansiedad y desorientación en la población, además de afectar la identidad cultural del entorno.',
+    causes:['Saturación de vallas publicitarias','Construcciones sin planeación urbana','Acumulación visible de residuos','Maraña de cables aéreos'],
+    effects:['Estrés y ansiedad en la población','Desorientación espacial y pérdida de referentes','Deterioro del turismo y la imagen ciudad','Pérdida de identidad cultural y estética'],
+    action:'Mantén el campus libre de cartelería excesiva. Apoya el diseño limpio y ordenado de los espacios del Politécnico, y denuncia publicidad ilegal en zonas naturales protegidas.'
+  },
+  {
+    id:'aud', color:'#3d5fa0', lightColor:'#a8c4f7',
+    icon:'🔊', kicker:'Contaminación',
+    title:'Lumínica y Auditiva',
+    img:'https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Contaminación lumínica nocturna',
+    indicator:'Ruido >65dB · Luz artificial',
+    desc:'Ruido excesivo e iluminación artificial que afectan a humanos y fauna urbana.',
+    def:'El ruido urbano en Medellín supera los 65 dB recomendados por la OMS en muchas vías. La luz artificial nocturna desorienta aves migratorias, altera insectos nocturnos y rompe los ritmos circadianos de los ecosistemas.',
+    causes:['Tráfico vehicular y claxons','Construcciones y obras industriales','Alumbrado público excesivo o mal orientado','Eventos masivos sin controles de ruido'],
+    effects:['Pérdida gradual de audición','Alteración del sueño y salud mental','Desorientación de aves migratorias','Reducción de biodiversidad nocturna'],
+    action:'Usa audífonos a volumen moderado. En zonas verdes del campus, respeta el silencio. Apaga luces innecesarias y reporta luminarias apuntando hacia áreas boscosas.'
+  },
+  {
+    id:'rad', color:'#a01a1a', lightColor:'#f7a8a8',
+    icon:'☢️', kicker:'Contaminación',
+    title:'Radioactiva',
+    img:'https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=700',
+    imgLabel:'Residuos peligrosos RESPEL',
+    indicator:'RESPEL · Daños genéticos',
+    desc:'Residuos peligrosos de origen nuclear, médico e industrial con efectos genéticos.',
+    def:'La radiación ionizante puede alterar el ADN de los organismos vivos, causar cáncer y mutaciones hereditarias. Colombia no tiene reactores nucleares, pero sí genera residuos radiactivos en hospitales, laboratorios e industrias mineras.',
+    causes:['Residuos de equipos médicos (radiología)','Accidentes industriales con materiales radiactivos','Minería de materiales con radio o uranio','Disposición inadecuada de RESPEL'],
+    effects:['Mutaciones genéticas heredables','Cáncer, leucemia y muerte celular','Contaminación del suelo por siglos','Daño a toda la cadena alimentaria'],
+    action:'Si trabajas en laboratorios del Poli que usan fuentes radioactivas, sigue siempre los protocolos de bioseguridad. Nunca manipules residuos peligrosos sin EPP certificado.'
+  }
+];
+
+const actions = [
+  {emoji:'🚇',title:'Movilidad limpia',desc:'Usa Metro, Metroplús o bicicleta en lugar de carro particular.'},
+  {emoji:'♻️',title:'Separación de residuos',desc:'Clasifica orgánicos, plástico, papel y RESPEL correctamente.'},
+  {emoji:'🌳',title:'Arborización',desc:'Participa en las jornadas de siembra en el campus del Poli.'},
+  {emoji:'💻',title:'E-waste responsable',desc:'Entrega celulares y pilas en puntos RESPEL del campus.'},
+  {emoji:'🔇',title:'Control del ruido',desc:'Respeta zonas de silencio y modera el volumen en espacios verdes.'},
+  {emoji:'💡',title:'Eficiencia energética',desc:'Apaga luces y equipos al salir. Usa solo la iluminación necesaria.'},
+  {emoji:'📊',title:'Monitorea el SIATA',desc:'Consulta las alertas de calidad del aire antes de salir al campus.'},
+  {emoji:'🗣️',title:'Difunde este mensaje',desc:'Comparte este folleto con tus compañeros y familia.'},
+];
+
+const quizData = [
+  {q:'¿Cuál es el contaminante del aire más peligroso para la salud respiratoria en Medellín?',opts:['Dióxido de carbono (CO₂)','Material particulado PM2.5','Vapor de agua','Nitrógeno (N₂)'],ans:1,fb:'¡Correcto! El PM2.5 son partículas tan pequeñas que penetran hasta los alvéolos pulmonares. En Medellín, el SIATA monitorea constantemente sus niveles.',fbWrong:'Incorrecto. El PM2.5 (material particulado fino) es el principal responsable de enfermedades respiratorias en el Valle de Aburrá por su capacidad de penetrar profundo en los pulmones.'},
+  {q:'¿Qué proceso ocurre cuando tóxicos de la contaminación hídrica se acumulan en los organismos a lo largo de la cadena alimentaria?',opts:['Fotosíntesis','Bioacumulación','Oxidación','Eutrofización'],ans:1,fb:'¡Correcto! La bioacumulación hace que los tóxicos se concentren más en cada nivel de la cadena, llegando a los humanos en mayores concentraciones.',fbWrong:'Incorrecto. El proceso se llama bioacumulación: los tóxicos se van concentrando en cada nivel de la cadena alimentaria, desde los peces pequeños hasta los humanos.'},
+  {q:'Verdadero o Falso: La contaminación lumínica solo afecta la observación astronómica y no tiene impacto real en los ecosistemas.',opts:['Verdadero','Falso — también altera ciclos naturales y fauna'],ans:1,fb:'¡Correcto! Falso. La luz artificial desorienta aves migratorias, reduce la actividad de insectos nocturnos y altera los ritmos circadianos de muchos organismos.',fbWrong:'Incorrecto. Falso: la contaminación lumínica sí afecta gravemente a los ecosistemas, especialmente a aves migratorias, insectos nocturnos y plantas que dependen de ciclos de luz.'},
+  {q:'¿Qué hace que la basura electrónica (e-waste) sea especialmente peligrosa para el suelo?',opts:['Su gran tamaño físico','La liberación de metales pesados como plomo y mercurio','Su color oscuro','El ruido que genera al descomponerse'],ans:1,fb:'¡Correcto! Un solo celular puede contaminar hasta 40.000 litros de agua subterránea por los metales tóxicos que libera al descomponerse en un relleno común.',fbWrong:'Incorrecto. El e-waste es peligroso porque contiene metales pesados como plomo, mercurio y cadmio que se filtran al suelo y agua subterránea, envenenando ecosistemas por décadas.'},
+  {q:'¿Cuál es el nivel de ruido máximo recomendado por la OMS para zonas urbanas residenciales?',opts:['85 dB','65 dB','45 dB','100 dB'],ans:1,fb:'¡Correcto! La OMS recomienda no superar 65 dB en zonas urbanas. Muchas vías de Medellín superan este límite durante el día.',fbWrong:'Incorrecto. La OMS recomienda no superar los 65 dB en zonas urbanas para proteger la salud auditiva. Muchas zonas de Medellín superan este umbral diariamente.'}
+];
+
+/* RENDER CARDS */
+const grid = document.getElementById('cardGrid');
+pollutions.forEach((p,i) => {
+  const card = document.createElement('div');
+  card.className = 'pcard reveal';
+  card.style.transitionDelay = (i*0.08)+'s';
+  card.innerHTML = `
+    <div class="pcard-img-wrap">
+      <img src="${p.img}" alt="${p.title}" class="pcard-img" loading="lazy"
+           onerror="this.src='https://picsum.photos/seed/${p.id}/700/300'">
+      <div class="pcard-img-label">${p.imgLabel}</div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-icon" style="background:${p.color}22">${p.icon}</div>
+      <div class="pcard-title">${p.title}</div>
+      <div class="pcard-desc">${p.desc}</div>
+      <div class="pcard-indicator" style="background:${p.color}22;color:${p.lightColor}">${p.indicator}</div>
+      <button class="pcard-link" onclick="openModal('${p.id}')">
+        Ver detalle
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>`;
+  grid.appendChild(card);
+});
+
+/* RENDER ACTIONS */
+const ag = document.getElementById('actionsGrid');
+actions.forEach((a,i) => {
+  const t = document.createElement('div');
+  t.className = 'action-tile reveal';
+  t.style.transitionDelay = (i*0.07)+'s';
+  t.innerHTML = `<span class="action-emoji">${a.emoji}</span><div class="action-title">${a.title}</div><div class="action-desc">${a.desc}</div>`;
+  ag.appendChild(t);
+});
+
+/* MODAL */
+function openModal(id) {
+  const p = pollutions.find(x=>x.id===id);
+  const mi = document.getElementById('modal-img');
+  mi.src = p.img;
+  mi.alt = p.title;
+  mi.onerror = function(){ this.src='https://picsum.photos/seed/'+p.id+'/680/240'; };
+  document.getElementById('modal-kicker').textContent = p.kicker;
+  document.getElementById('modal-kicker').style.color = p.lightColor;
+  document.getElementById('modal-title').textContent = p.icon+' '+p.title;
+  document.getElementById('modal-def').textContent = p.def;
+  document.getElementById('modal-boxes').innerHTML = `
+    <div class="box"><div class="box-title" style="color:${p.lightColor}">⚡ Causas principales</div><ul>${p.causes.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+    <div class="box"><div class="box-title" style="color:#ff8a80">⚠️ Efectos</div><ul>${p.effects.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+  document.getElementById('modal-action').textContent = p.action;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if(e && e.target !== document.getElementById('modal-overlay') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal({target:document.getElementById('modal-overlay')}); });
+
+/* QUIZ */
+let qIndex=0, score=0;
+function renderQ() {
+  const q = quizData[qIndex];
+  document.getElementById('qCounter').textContent = `Pregunta ${qIndex+1} de ${quizData.length}`;
+  document.getElementById('qBar').style.width = ((qIndex+1)/quizData.length*100)+'%';
+  document.getElementById('quizArea').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,i)=>`<button class="q-opt" onclick="pickAns(this,${i},${q.ans},'${q.fb.replace(/'/g,"\\'")}','${q.fbWrong.replace(/'/g,"\\'")}')"> ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qFb"></div>
+      <button class="btn-next" id="btnNext" onclick="nextQ()">
+        ${qIndex<quizData.length-1?'Siguiente pregunta':'Ver mi resultado'}
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>`;
+}
+function pickAns(btn, chosen, correct, fb, fbWrong) {
+  const btns = btn.closest('.quiz-options').querySelectorAll('.q-opt');
+  btns.forEach(b=>b.disabled=true);
+  const feedEl = document.getElementById('qFb');
+  if(chosen===correct){btn.classList.add('correct');feedEl.className='quiz-feedback show ok';feedEl.textContent='✓ '+fb;score++;}
+  else{btn.classList.add('wrong');btns[correct].classList.add('correct');feedEl.className='quiz-feedback show fail';feedEl.textContent='✗ '+fbWrong;}
+  document.getElementById('btnNext').classList.add('show');
+}
+function nextQ(){qIndex++;if(qIndex>=quizData.length){showScore();}else{renderQ();}}
+function showScore(){
+  const pct=Math.round(score/quizData.length*100);
+  const msgs=['Revisa el folleto nuevamente. ¡Puedes mejorar!','Buen inicio. Repasa los temas que fallaste.','¡Muy bien! Ya tienes bases sólidas.','¡Casi perfecto! Eres un experto.','¡PERFECTO! 🌿 Dominas totalmente el tema.'];
+  const idx=score===quizData.length?4:score>=3?3:score>=2?2:score>=1?1:0;
+  document.getElementById('quizArea').innerHTML=`<div class="score-reveal"><div class="score-big">${score}/${quizData.length}</div><div class="score-label">${pct}% de respuestas correctas</div><div class="score-msg">${msgs[idx]}</div><button class="btn-restart" onclick="restartQuiz()">↩ Intentar de nuevo</button></div>`;
+  document.getElementById('qCounter').textContent='Resultado final';
+  document.getElementById('qBar').style.width=pct+'%';
+}
+function restartQuiz(){qIndex=0;score=0;renderQ();}
+renderQ();
+
+/* NAV DOTS */
+const sections=['s0','stats','s1','s2','s3','s4'];
+const labels=['Inicio','Datos','Tipos','Acción','Quiz','Cierre'];
+const dotsEl=document.getElementById('dots');
+sections.forEach((id,i)=>{
+  const d=document.createElement('div');
+  d.className='dot';d.title=labels[i];
+  d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  dotsEl.appendChild(d);
+});
+function updateDots(){
+  const ys=sections.map(id=>document.getElementById(id).getBoundingClientRect().top);
+  const active=ys.reduce((best,y,i)=>Math.abs(y)<Math.abs(ys[best])?i:best,0);
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===active));
+}
+function onScroll(){
+  const h=document.documentElement.scrollHeight-innerHeight;
+  document.getElementById('progress').style.width=(scrollY/h*100)+'%';
+  document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*0.88)el.classList.add('visible');});
+  updateDots();
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+</script>
+</body>
+</html>
